@@ -1,4 +1,7 @@
 #!/usr/bin/python3
+"""2-rectangle, built for Holberton Python project 0x08 task 2.
+"""
+
 
 class Rectangle:
     """Takes in args for width and height of a rectangle, and contains methods
