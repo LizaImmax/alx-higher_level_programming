@@ -64,17 +64,44 @@ class Base:
         return dummy
 
     @classmethod
-    def load_from_file(cls):
-        filename = cls.__name__ + '.json'
+    def save_to_file_csv(cls, list_objs):
+        if list_objs is None:
+            list_objs = []
 
-        if path.exists(filename) is False:
+        if cls.__name__ == 'Rectangle':
+            keys = ('id', 'width', 'height', 'x', 'y')
+        elif cls.__name__ == 'Square':
+            keys = ('id', 'size', 'x', 'y')
+
+        list_dicts = []
+        for item in list_objs:
+            list_dicts.append(item.to_dictionary())
+
+        filename = cls.__name__ + '.csv'
+        with open(filename, 'w', encoding='utf-8') as file:
+            csv_writer = csv.DictWriter(file, keys)
+            csv_writer.writeheader()
+            for dict in list_dicts:
+                csv_writer.writerow(dict)
+
+    @classmethod
+    def load_from_file_csv(cls):
+        import os.path
+
+        if cls.__name__ == 'Rectangle':
+            keys = ('id', 'width', 'height', 'x', 'y')
+        elif cls.__name__ == 'Square':
+            keys = ('id', 'size', 'x', 'y')
+
+        filename = cls.__name__ + '.csv'
+        if os.path.exists(filename):
+            with open(filename, 'r', encoding='utf-8') as file:
+                csv_reader = csv.DictReader(file)
+                instance_list = []
+                for row in csv_reader:
+                    for key in keys:
+                        row[key] = int(row[key])
+                    instance_list.append(cls.create(**row))
+                return instance_list
+        else:
             return []
-
-        with open(filename, mode='r', encoding='utf-8') as f:
-            objs = cls.from_json_string(f.read())
-            instances = []
-
-            for elem in objs:
-                instances.append(cls.create(**elem))
-
-            return instances
