@@ -1,6 +1,9 @@
 #!/usr/bin/node
-function add (a, b) {
-  return (a + b);
+const sqr = process.argv[2];
+if (isNaN(sqr)) {
+  console.log('Missing size');
+} else {
+  for (let x = 0; x < sqr; x++) {
+    console.log('X'.repeat(sqr));
+  }
 }
-
-console.log(add(Number(process.argv[2]), Number(process.argv[3])));
